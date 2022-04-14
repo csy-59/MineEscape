@@ -17,6 +17,8 @@ int main()
 	int gamePlayerPosition[2] = { 1, 1 };
 	int gameItem[2][4];
 	int gameItemCount = 4;
+
+
 	char gameKey;
 
 	// 게임 난이도 설정 // map // sight
@@ -46,29 +48,10 @@ int main()
 		break;
 	}
 
-	//// 난수 생성, gameEscape 설정
-	//// x축
-	//srand(time(NULL));
-	//gameEscape[0] = rand();
-	//srand(time(NULL));
-	//gameEscape[0] += rand();
-	//gameEscape[0] %= gameMapSize; // map
 
-	//// y축
-	//srand(time(NULL));
-	//gameEscape[1] = rand();
-	//srand(time(NULL));
-	//gameEscape[1] += rand();
-	//gameEscape[1] %= gameMapSize; // map
 
-	//// gameEscape = {0, 0} 제외
-	//while (gameEscape[0] == 0 || gameEscape[1] == 0 || gameEscape[0] == 19 || gameEscape[1] == 19 || (gameEscape[0] == 1 && gameEscape[1] == 1))
-	//{
-	//	gameEscape[0] = rand();
-	//	gameEscape[0] %= gameMapSize; // map
-	//	gameEscape[1] = rand();
-	//	gameEscape[1] %= gameMapSize; // map
-	//}
+
+
 
 	//탈출 위치 지정
 	do {
