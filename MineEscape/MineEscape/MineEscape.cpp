@@ -114,7 +114,7 @@ int main()
 	{
 		for (int i = 0; i < gameMapSize + 2; i++) // map
 		{
-			(i == 0 || j == 0 || i == gameMapSize-1 || j == gameMapSize - 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/';
+			(i == 0 || j == 0 || i == gameMapSize + 1 || j == gameMapSize + 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/';
 		}
 	}
 
@@ -243,7 +243,7 @@ int main()
 		case 'a':
 			for (int j = 0;j < gamesTalactiteCount;j++) {
 				if (gamePlayerPosition[1] == gamesTalactitePosition[j][0] &&
-					(gamePlayerPosition[0]-1) == gamesTalactitePosition[j][1]) {
+					(gamePlayerPosition[0] - 1) == gamesTalactitePosition[j][1]) {
 					//만약 종유석 위치와 겹친다면
 					errPosition = true;
 					break;
@@ -255,7 +255,7 @@ int main()
 		case 'S':
 		case 's':
 			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if ((gamePlayerPosition[1]+1) == gamesTalactitePosition[j][0] &&
+				if ((gamePlayerPosition[1] + 1) == gamesTalactitePosition[j][0] &&
 					gamePlayerPosition[0] == gamesTalactitePosition[j][1]) {
 					//만약 종유석 위치와 겹친다면
 					errPosition = true;
