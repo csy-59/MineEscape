@@ -66,52 +66,6 @@ int main()
 
 	cout << "로딩중..." << endl;
 
-	// 난수 생성, gameEscape(탈출구) 설정
-	//// x축
-	//srand(time(NULL));
-	//gameEscape[0] = rand();
-	//srand(time(NULL));
-	//gameEscape[0] += rand();
-	//gameEscape[0] %= gameMapSize; // map
-	//
-	//// y축
-	//srand(time(NULL));
-	//gameEscape[1] = rand();
-	//srand(time(NULL));
-	//gameEscape[1] += rand();
-	//gameEscape[1] %= 20; // map
-	//
-	//// gameEscape = {0, 0} 제외
-	//while (gameEscape[0] == 0 || gameEscape[1] == 0 || gameEscape[0] == 19 || gameEscape[1] == 19 || (gameEscape[0] == 1 && gameEscape[1] == 1))
-	//{
-	//	gameEscape[0] = rand();
-	//	gameEscape[0] %= 20; // map
-	//	gameEscape[1] = rand();
-	//	gameEscape[1] %= 20; // map
-	//}
-
-	//탈출 위치 지정
-	do {
-		srand(time(NULL));
-		gameEscape[0] = rand() % gameMapSize + 1;
-		srand(time(NULL));
-		gameEscape[1] = rand() % gameMapSize + 1;
-	} while (gameEscape[0] == 1 && gameEscape[1] == 1);
-
-	// 탈출지점(gameEscape) 지정
-	gameMap[gameEscape[0]][gameEscape[1]] = 'E';
-
-	// 플레이어 위치(gamePlayerPosition) 지정
-	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
-
-	// 플레이어 초기 시야 지정
-	for (int i = -1; i < 2; i++) {
-		for (int j = -1; j < 2; j++) {
-			if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
-				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
-		}
-	}
-
 	// gameMap 초기화
 	for (int j = 0; j < gameMapSize + 2; j++) // map
 	{
@@ -121,6 +75,28 @@ int main()
 		}
 	}
 
+
+	// 플레이어 위치(gamePlayerPosition) 지정
+	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
+
+	// 플레이어 시야 지정 // sight
+	for (int i = -1 * gameSight; i < gameSight + 1; i++) {
+		for (int j = -1 * gameSight; j < gameSight + 1; j++) {
+			if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
+				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
+		}
+	}
+
+	//탈출 위치 지정
+	do {
+		srand(time(NULL));
+		gameEscape[0] = rand() % gameMapSize + 1;
+		gameEscape[1] = rand() % gameMapSize + 1;
+	} while (gameEscape[0] == 1 && gameEscape[1] == 1);
+
+	// 탈출지점(gameEscape) 지정
+	gameMap[gameEscape[0]][gameEscape[1]] = 'E';
+
 	//종유석 위치
 	for (int i = 0; i < gamesTalactiteCount;i++) {
 		bool isStalactitePossible = true;
@@ -128,13 +104,14 @@ int main()
 			isStalactitePossible = true;
 			srand(time(NULL));
 			gamesTalactitePosition[i][0] = rand() % gameMapSize + 1;
-			srand(time(NULL));
 			gamesTalactitePosition[i][1] = rand() % gameMapSize + 1;
 
+			//플레이어 초기위치 판별
 			if ((gamesTalactitePosition[i][0] == 1 && gamesTalactitePosition[i][1] == 1))
 				isStalactitePossible = false;
 
-			if ((gamesTalactitePosition[i][0] == gameEscape[1] && gamesTalactitePosition[i][1] == gameEscape[0]))
+			//탈출 위치 판별
+			if (gamesTalactitePosition[i][1] == gameEscape[1] && gamesTalactitePosition[i][0] == gameEscape[0])
 				isStalactitePossible = false;
 
 			for (int j = 0;j < i;j++) {
@@ -150,24 +127,24 @@ int main()
 
 		//안전한 종유석의 자리라면 종유석으로 지정
 		gameMap[gamesTalactitePosition[i][0]][gamesTalactitePosition[i][1]] = 'T';
-		cout << gamesTalactitePosition[i][0] << " " << gamesTalactitePosition[i][1] << endl;
 	}
 
 	//보석 위치
 	for (int i = 0; i < gameJewelryCount;i++) {
+		
 		bool isJewelryPossible = true;
+		
 		do {
 			isJewelryPossible = true;
 
 			srand(time(NULL));
 			gameJewelryPosition[i][0] = rand() % gameMapSize + 1;
-			srand(time(NULL));
 			gameJewelryPosition[i][1] = rand() % gameMapSize + 1;
 
 			if ((gameJewelryPosition[i][0] == 1 && gameJewelryPosition[i][1] == 1))
 				isJewelryPossible = false;
 
-			if ((gameJewelryPosition[i][0] == gameEscape[1] && gameJewelryPosition[i][1] == gameEscape[0]))
+			if ((gameJewelryPosition[i][1] == gameEscape[1] && gameJewelryPosition[i][0] == gameEscape[0]))
 				isJewelryPossible = false;
 
 			for (int j = 0;j < gamesTalactiteCount;j++) {
@@ -192,7 +169,6 @@ int main()
 
 		//안전한 보석의 자리라면 보석으로 지정
 		gameMap[gameJewelryPosition[i][0]][gameJewelryPosition[i][1]] = 'J';
-		cout << gameJewelryPosition[i][0] << " " << gameJewelryPosition[i][1] << endl;
 
 		//보석 점수 설정
 		srand(time(NULL));
@@ -202,9 +178,13 @@ int main()
 
 	//회복 우물 위치
 
+
+	system("cls");
 	// 이동 및 화면 갱신 
 	do
 	{
+	//cout << gameEscape[0] << " " << gameEscape[1] << endl;
+	//cout << gamePlayerPosition[0] << " " << gamePlayerPosition[1] << endl;
 		// 화면 표시
 		for (int j = 0; j < gameMapSize + 2; j++) // map
 		{
@@ -217,8 +197,10 @@ int main()
 
 		//하단 스코어, 스테미나 표시
 		cout << "score: " << score << endl;
+		cout << "walk: " << walk << endl;
 
 		gameKey = _getch();
+
 		// 초기화
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = ' ';
 		for (int i = -1 * gameSight; i < gameSight + 1; i++) {								// sight
@@ -252,6 +234,7 @@ int main()
 
 			if (!errPosition) {
 				gamePlayerPosition[1] -= 1;
+				walk++;
 			}
 			break;
 		case 'A':
@@ -271,8 +254,10 @@ int main()
 				}
 			}
 
-			if (!errPosition)
+			if (!errPosition) {
 				gamePlayerPosition[0] -= 1;
+				walk++;
+			}
 			break;
 		case 'S':
 		case 's':
@@ -290,8 +275,10 @@ int main()
 					}
 				}
 			}
-			if (!errPosition)
+			if (!errPosition) {
 				gamePlayerPosition[1] += 1;
+				walk++;
+			}
 			break;
 		case 'D':
 		case 'd':
@@ -310,8 +297,10 @@ int main()
 				}
 			}
 
-			if (!errPosition)
+			if (!errPosition) {
 				gamePlayerPosition[0] += 1;
+				walk++;
+			}
 			break;
 		default:
 			errPosition = 1;
