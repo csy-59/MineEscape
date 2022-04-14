@@ -17,7 +17,7 @@ int main()
 	int gamePlayerPosition[2] = { 1, 1 };
 	int gameItem[2][4];
 	int gameItemCount = 4;
-
+	char wellLocation[9] = {'8','8','8','8','8','8','8','8','8' };
 
 	char gameKey;
 
@@ -49,7 +49,7 @@ int main()
 	}
 
 
-
+	
 
 
 
@@ -68,6 +68,8 @@ int main()
 			gameItem[1][i] = rand() % gameMapSize + 1;
 		} while (gameItem[0][i] == 1 && gameItem[1][i] == 1);
 	}
+
+	
 	
 
 	// gameMap 초기화
@@ -97,6 +99,8 @@ int main()
 				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 		}
 	}
+
+	
 
 	// 이동 및 화면 갱신 
 	do
@@ -168,8 +172,7 @@ int main()
 			errPosition = 1;
 		}
 
-		// 플레이어 위치 업로드
-		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
+		
 
 		// 플레이어 시야 지정 // sight
 		for (int i = -1 * gameSight; i < gameSight + 1; i++) {
@@ -178,7 +181,14 @@ int main()
 					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 			}
 		}
-
+		//우물 위치 지정
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				gameMap[(gameMapSize/2) + i][(gameMapSize / 2) + j] = wellLocation[i + j];
+			}
+		}
+		// 플레이어 위치 업로드
+		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 		// 화면 갱신
 		system("cls");
 
