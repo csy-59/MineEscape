@@ -114,7 +114,7 @@ int main()
 	{
 		for (int i = 0; i < gameMapSize + 2; i++) // map
 		{
-			(i == 0 || j == 0 || i == gameMapSize-1 || j == gameMapSize - 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/';
+			(i == 0 || j == 0 || i == gameMapSize + 1 || j == gameMapSize + 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/'; // map
 		}
 	}
 
