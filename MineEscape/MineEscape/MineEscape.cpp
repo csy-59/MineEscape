@@ -7,15 +7,38 @@ using namespace std;
 
 int main()
 {	
-	//// 게임 난이도 설정 // map // sight
-	//int gameLevel[3] = {1, 2, 3};
-	//int inputGameLevel;
+	// 게임 난이도 설정 // map // sight
+	int gameLevel[3] = {1, 2, 3};
+	int inputGameLevel;
+	char gameMap[20][20]{}; // map
+
 	//cin >> inputGameLevel;
 
-	char gameMap[20][20]; // map
+	//switch (inputGameLevel)
+	//{
+	//case 1:
+	//	char gameMap[20][20]; // map
+	//	int gameMapSize = 20;
+	//	int gameSight = 3; // sight
+	//	break;
+	//case 2:
+	//	char gameMap[20][20]; // map
+	//	int gameMapSize = 20;
+	//	int gameSight = 3; // sight
+	//	break;
+	//case 3:
+	//	char gameMap[20][20]; // map
+	//	int gameMapSize = 20;
+	//	int gameSight = 3; // sight
+	//	break;
+	//}
+
+	
 	int gameEscape[2];
 	int gamePlayerPosition[2] = { 1, 1 };
 	char gameKey;
+	int stamina = 10; // 남은횟수 추가
+	bool gameOver = false;
 
 	// 난수 생성, gameEscape 설정
 	// x축
@@ -75,7 +98,7 @@ int main()
 	}
 
 	// 이동 및 화면 갱신
-	while (gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1])
+	while (!gameOver)
 	{
 		gameKey = _getch();
 
@@ -99,15 +122,22 @@ int main()
 		{
 		case 'W':
 			gamePlayerPosition[1] -= 1;
+			--stamina;
 			break;
 		case 'A':
 			gamePlayerPosition[0] -= 1;
+			--stamina;
+
 			break;
 		case 'S':
 			gamePlayerPosition[1] += 1;
+			--stamina;
+
 			break;
 		case 'D':
 			gamePlayerPosition[0] += 1;
+			--stamina;
+
 			break;
 		default:
 			errPosition = 1;
@@ -160,9 +190,21 @@ int main()
 			}
 			cout << endl;
 		}
+		//gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1]
+		
+		//게임 종료 반복문
+		if (gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] == gameMap[gameEscape[0]][gameEscape[1]])
+		{
+			gameOver = true;
+		}
 		// 이동 한계 출력
 		errPosition == 1 ? cout << "이동 불가" << endl : cout << gameKey << endl;
+		cout << "남은횟수" << stamina << endl;
+		if (stamina == 0)
+		{
+			gameOver = true;
+			cout << "탈출에 실패 했습니다." << endl;
+		}
 	}
-
-	cout << "탈출에 성공했습니다." << endl;
+	cout << "게임종료" << endl;
 }
