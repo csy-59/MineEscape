@@ -15,6 +15,7 @@ int main()
 	int gameSight;
 	int gameEscape[2];
 	int gamePlayerPosition[2] = { 1, 1 };
+	int gameItem[2][4];
 	char gameKey;
 
 	// 게임 난이도 설정 // map // sight
@@ -76,6 +77,15 @@ int main()
 		gameEscape[1] = rand() % gameMapSize + 1;
 	} while (gameEscape[0] == 1 && gameEscape[1] == 1);
 
+	//아이템 위치 지정
+	for (int i = 0; i < 4; i++) {
+		do {
+			gameItem[0][i] = rand() % gameMapSize + 1;
+			gameItem[1][i] = rand() % gameMapSize + 1;
+		} while (gameItem[0][i] == 1 && gameItem[1][i] == 1);
+	}
+	
+
 	// gameMap 초기화
 	for (int j = 0; j < gameMapSize + 2; j++) // map
 	{
@@ -87,6 +97,11 @@ int main()
 
 	// 탈출지점(gameEscape) 저장
 	gameMap[gameEscape[0]][gameEscape[1]] = 'E';
+
+	for (int i = 0; i < 4; i++) {
+		gameMap[gameItem[0][i]][gameItem[1][i]] = 'I';
+	}
+	
 
 	// 플레이어 위치(gamePlayerPosition) 지정
 	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
