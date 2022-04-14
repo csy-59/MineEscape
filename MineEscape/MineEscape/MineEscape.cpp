@@ -17,7 +17,8 @@ int main()
 	int gamePlayerPosition[2] = { 1, 1 };
 	int gameItem[2][4];
 	int gameItemCount = 4;
-	char wellLocation[9] = { '8','8','8','8','8','8','8','8','8' };
+	int gamePlayerChance = 20;
+	char wellLocation = '#';
 
 	char gameKey;
 
@@ -69,7 +70,7 @@ int main()
 		} while (gameItem[0][i] == 1 && gameItem[1][i] == 1);
 	}
 
-
+	
 
 
 	// gameMap 초기화
@@ -132,18 +133,22 @@ int main()
 		case 'W':
 		case 'w':
 			gamePlayerPosition[1] -= 1;
+			gamePlayerChance--;
 			break;
 		case 'A':
 		case 'a':
 			gamePlayerPosition[0] -= 1;
+			gamePlayerChance--;
 			break;
 		case 'S':
 		case 's':
 			gamePlayerPosition[1] += 1;
+			gamePlayerChance--;
 			break;
 		case 'D':
 		case 'd':
 			gamePlayerPosition[0] += 1;
+			gamePlayerChance--;
 			break;
 		default:
 			errPosition = 1;
@@ -182,24 +187,25 @@ int main()
 			}
 		}
 		//우물 위치 지정
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				gameMap[(gameMapSize / 2) + i][(gameMapSize / 2) + j] = wellLocation[i + j];
-			}
-		}
+		gameMap[gameMapSize/2][gameMapSize/2] = wellLocation;
 		// 플레이어 위치 업로드
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 		for (int i = 0; i < gameItemCount; i++)
 			if (gamePlayerPosition[0] == gameItem[0][i] && gamePlayerPosition[1] == gameItem[1][i]) {
 				gameSight+=2;
 			}
+		if (gamePlayerPosition[0] == gameMap[gameMapSize / 2][gameMapSize / 2] && gamePlayerPosition[1] == [gameMapSize / 2][gameMapSize / 2]) {
+			gamePlayerChance = 20;
+		}
+		
 
 				// 화면 갱신
 				system("cls");
 
 		// cout << gamePlayerPosition[0] << gamePlayerPosition[1] << endl;
 		// 이동 한계 출력
-		errPosition == 1 ? cout << "이동 불가" << endl : cout << gameKey << endl;
+		errPosition == 1 ? cout << "이동 불가" << endl : cout << gameKey << "\t" << gamePlayerChance << endl;
+		
 	} while (gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1]);
 
 	cout << "탈출에 성공했습니다." << endl;
