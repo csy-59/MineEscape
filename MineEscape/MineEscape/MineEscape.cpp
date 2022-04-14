@@ -13,7 +13,7 @@ int main()
     escapeY = rand() % 9 + 1;
     playerX = 1;
     playerY = 1;
-    char array[11][11];
+    char array[11][11] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
     char playerSight = ' ';
 
     while (1) {
