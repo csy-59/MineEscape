@@ -8,57 +8,65 @@ using namespace std;
 int main()
 {	
 	// 게임 난이도 설정 // map // sight
-	int gameLevel[3] = {1, 2, 3};
 	int inputGameLevel;
 	cin >> inputGameLevel;
+
+	char gameMap[42][42] = { ' ' }; //맵
+	int gameMapSize; //맵 크기
+	int gameSight; //시아 크기
+
+	int gameEscape[2];	//출구 위치
+	int gamePlayerPosition[2] = { 1, 1 }; //플레이어 위치
+	char gameKey; //입력키
 
 	switch (inputGameLevel)
 	{
 	case 1:
-		char gameMap[20][20]; // map
-		int gameMapSize = 20;
-		int gameSight = 3; // sight
+		gameMapSize = 20;
+		gameSight = 3; // sight
 		break;
 	case 2:
-		char gameMap[20][20]; // map
-		int gameMapSize = 20;
-		int gameSight = 3; // sight
+		gameMapSize = 20;
+		gameSight = 3; // sight
 		break;
 	case 3:
-		char gameMap[20][20]; // map
-		int gameMapSize = 20;
-		int gameSight = 3; // sight
+		gameMapSize = 20;
+		gameSight = 3; // sight
 		break;
 	}
 
-	
-	int gameEscape[2];
-	int gamePlayerPosition[2] = { 1, 1 };
-	char gameKey;
+	// 난수 생성, gameEscape(탈출구) 설정
+	//// x축
+	//srand(time(NULL));
+	//gameEscape[0] = rand();
+	//srand(time(NULL));
+	//gameEscape[0] += rand();
+	//gameEscape[0] %= gameMapSize; // map
+	//
+	//// y축
+	//srand(time(NULL));
+	//gameEscape[1] = rand();
+	//srand(time(NULL));
+	//gameEscape[1] += rand();
+	//gameEscape[1] %= 20; // map
+	//
+	//// gameEscape = {0, 0} 제외
+	//while (gameEscape[0] == 0 || gameEscape[1] == 0 || gameEscape[0] == 19 || gameEscape[1] == 19 || (gameEscape[0] == 1 && gameEscape[1] == 1))
+	//{
+	//	gameEscape[0] = rand();
+	//	gameEscape[0] %= 20; // map
+	//	gameEscape[1] = rand();
+	//	gameEscape[1] %= 20; // map
+	//}
 
-	// 난수 생성, gameEscape 설정
-	// x축
-	srand(time(NULL));
-	gameEscape[0] = rand();
-	srand(time(NULL));
-	gameEscape[0] += rand();
-	gameEscape[0] %= 20; // map
+	//탈출 위치 지정
+	do {
+		srand(time(NULL));
+		gameEscape[0] = rand() % gameMapSize + 1;
+		srand(time(NULL));
+		gameEscape[1] = rand() % gameMapSize + 1;
+	} while (gameEscape[0] == 1 && gameEscape[1] == 1);
 
-	// y축
-	srand(time(NULL));
-	gameEscape[1] = rand();
-	srand(time(NULL));
-	gameEscape[1] += rand();
-	gameEscape[1] %= 20; // map
-
-	// gameEscape = {0, 0} 제외
-	while (gameEscape[0] == 0 || gameEscape[1] == 0 || gameEscape[0] == 19 || gameEscape[1] == 19 || (gameEscape[0] == 1 && gameEscape[1] == 1))
-	{
-		gameEscape[0] = rand();
-		gameEscape[0] %= 20; // map
-		gameEscape[1] = rand();
-		gameEscape[1] %= 20; // map
-	}
 
 	// gameMap 초기화
 	for (int j = 0; j < 20; j++) // map
