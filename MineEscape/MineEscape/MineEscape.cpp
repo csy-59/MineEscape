@@ -229,8 +229,8 @@ int main()
 		case 'W':
 		case 'w':
 			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if ((gamePlayerPosition[1] - 1) == gamesTalactitePosition[j][0] &&
-					gamePlayerPosition[0] == gamesTalactitePosition[j][1]) {
+				if ((gamePlayerPosition[1] - 1) == gamesTalactitePosition[j][1] &&
+					gamePlayerPosition[0] == gamesTalactitePosition[j][0]) {
 					//만약 종유석 위치와 겹친다면
 					errPosition = true;
 					break;
@@ -242,8 +242,8 @@ int main()
 		case 'A':
 		case 'a':
 			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if (gamePlayerPosition[1] == gamesTalactitePosition[j][0] &&
-					(gamePlayerPosition[0]-1) == gamesTalactitePosition[j][1]) {
+				if (gamePlayerPosition[1] == gamesTalactitePosition[j][1] &&
+					(gamePlayerPosition[0]-1) == gamesTalactitePosition[j][0]) {
 					//만약 종유석 위치와 겹친다면
 					errPosition = true;
 					break;
@@ -255,8 +255,8 @@ int main()
 		case 'S':
 		case 's':
 			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if ((gamePlayerPosition[1]+1) == gamesTalactitePosition[j][0] &&
-					gamePlayerPosition[0] == gamesTalactitePosition[j][1]) {
+				if ((gamePlayerPosition[1]+1) == gamesTalactitePosition[j][1] &&
+					gamePlayerPosition[0] == gamesTalactitePosition[j][0]) {
 					//만약 종유석 위치와 겹친다면
 					errPosition = true;
 					break;
@@ -268,8 +268,8 @@ int main()
 		case 'D':
 		case 'd':
 			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if (gamePlayerPosition[1] == gamesTalactitePosition[j][0] &&
-					(gamePlayerPosition[0] + 1) == gamesTalactitePosition[j][1]) {
+				if (gamePlayerPosition[1] == gamesTalactitePosition[j][1] &&
+					(gamePlayerPosition[0] + 1) == gamesTalactitePosition[j][0]) {
 					//만약 종유석 위치와 겹친다면
 					errPosition = true;
 					break;
