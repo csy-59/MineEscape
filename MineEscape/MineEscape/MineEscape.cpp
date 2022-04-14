@@ -7,12 +7,31 @@ using namespace std;
 
 int main()
 {	
-	//// 게임 난이도 설정 // map // sight
-	//int gameLevel[3] = {1, 2, 3};
-	//int inputGameLevel;
-	//cin >> inputGameLevel;
+	// 게임 난이도 설정 // map // sight
+	int gameLevel[3] = {1, 2, 3};
+	int inputGameLevel;
+	cin >> inputGameLevel;
 
-	char gameMap[20][20]; // map
+	switch (inputGameLevel)
+	{
+	case 1:
+		char gameMap[20][20]; // map
+		int gameMapSize = 20;
+		int gameSight = 3; // sight
+		break;
+	case 2:
+		char gameMap[20][20]; // map
+		int gameMapSize = 20;
+		int gameSight = 3; // sight
+		break;
+	case 3:
+		char gameMap[20][20]; // map
+		int gameMapSize = 20;
+		int gameSight = 3; // sight
+		break;
+	}
+
+	
 	int gameEscape[2];
 	int gamePlayerPosition[2] = { 1, 1 };
 	char gameKey;
