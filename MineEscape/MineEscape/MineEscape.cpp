@@ -6,10 +6,16 @@
 using namespace std;
 
 int main()
-{
-	char gameMap[10][10];
+{	
+	//// 게임 난이도 설정
+	//int gameLevel[3] = {1, 2, 3};
+	//int inputGameLevel;
+	//cin >> inputGameLevel;
+
+	char gameMap[20][20]; // map
 	int gameEscape[2];
-	int gamePlayerPosition[2] = { 0, 0 };
+	int gamePlayerPosition[2] = { 1, 1 };
+	int gameSight[8][2] = { {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} };
 	char gameKey;
 
 	// 난수 생성, gameEscape 설정
@@ -37,24 +43,24 @@ int main()
 	}
 
 	// gameMap 초기화
-	for (int j = 0; j < 10; j++)
+	for (int j = 0; j < 20; j++) // map
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 20; i++) // map
 		{
-			gameMap[j][i] = '#';
+			(i == 0 || j == 0 || i == 19 || j == 19) ? gameMap[j][i] = '*' : gameMap[j][i] = '/';
 		}
 	}
 
-	// 탈출지점(gameEscape) 표시
+	// 탈출지점(gameEscape) 지정
 	gameMap[gameEscape[0]][gameEscape[1]] = 'E';
 
-	// 플레이어 위치(gamePlayerPosition) 표시
+	// 플레이어 위치(gamePlayerPosition) 지정
 	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 
 	// 초기화면 표시
-	for (int j = 0; j < 10; j++)
+	for (int j = 0; j < 20; j++) // map
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 20; i++) // map
 		{
 			cout << gameMap[i][j];
 		}
@@ -95,22 +101,22 @@ int main()
 		}
 
 		// 이동 한계 (if문)
-		if (gamePlayerPosition[0] > 9)
+		if (gamePlayerPosition[0] > 18) // map
 		{
 			gamePlayerPosition[0] -= 1;
 			errPosition = 1;
 		}
-		else if (gamePlayerPosition[0] < 0)
+		else if (gamePlayerPosition[0] < 1)
 		{
 			gamePlayerPosition[0] += 1;
 			errPosition = 1;
 		}
-		else if (gamePlayerPosition[1] > 9)
+		else if (gamePlayerPosition[1] > 18) // map
 		{
 			gamePlayerPosition[1] -= 1;
 			errPosition = 1;
 		}
-		else if (gamePlayerPosition[1] < 0)
+		else if (gamePlayerPosition[1] < 1) // map
 		{
 			gamePlayerPosition[1] += 1;
 			errPosition = 1;
@@ -124,9 +130,9 @@ int main()
 
 		// cout << gamePlayerPosition[0] << gamePlayerPosition[1] << endl;
 
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < 20; j++) // map
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 20; i++) // map
 			{
 				cout << gameMap[i][j];
 			}
