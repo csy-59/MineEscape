@@ -17,7 +17,7 @@ int main()
 	int gamePlayerPosition[2] = { 1, 1 };
 	int gameItem[2][4];
 	int gameItemCount = 4;
-	int gamePlayerChance = 20;
+	
 	char wellLocation = '#';
 
 	char gameKey;
@@ -35,6 +35,7 @@ int main()
 		gameMapSize = 40; // map
 		break;
 	}
+	int gamePlayerChance = gameMapSize*2;
 
 	switch (inputSightLevel)
 	{
@@ -194,10 +195,9 @@ int main()
 			if (gamePlayerPosition[0] == gameItem[0][i] && gamePlayerPosition[1] == gameItem[1][i]) {
 				gameSight+=2;
 			}
-		if (gamePlayerPosition[0] == gameMap[gameMapSize / 2][gameMapSize / 2] && gamePlayerPosition[1] == [gameMapSize / 2][gameMapSize / 2]) {
-			gamePlayerChance = 20;
+		if (gamePlayerPosition[0] == gameMapSize/2 && gamePlayerPosition[1] == gameMapSize / 2) {
+			gamePlayerChance = gameMapSize * 2;
 		}
-		
 
 				// 화면 갱신
 				system("cls");
@@ -205,6 +205,7 @@ int main()
 		// cout << gamePlayerPosition[0] << gamePlayerPosition[1] << endl;
 		// 이동 한계 출력
 		errPosition == 1 ? cout << "이동 불가" << endl : cout << gameKey << "\t" << gamePlayerChance << endl;
+		
 		
 	} while (gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1]);
 
