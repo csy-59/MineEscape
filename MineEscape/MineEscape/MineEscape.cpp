@@ -26,6 +26,9 @@ int main()
 
 	int gameJewelryBasicSocre[3] = { 100,200,300 };//보석 기본 점수(여기서 랜덤으로 배정)
 
+	int score = 0;
+	int walk = 0;
+
 	
 	// 게임 난이도 설정 // map // sight
 	cout << "=================" << endl;
@@ -211,6 +214,10 @@ int main()
 			}
 			cout << endl;
 		}
+
+		//하단 스코어, 스테미나 표시
+		cout << "score: " << score << endl;
+
 		gameKey = _getch();
 		// 초기화
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = ' ';
@@ -228,59 +235,97 @@ int main()
 		{
 		case 'W':
 		case 'w':
-			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if ((gamePlayerPosition[1] - 1) == gamesTalactitePosition[j][1] &&
-					gamePlayerPosition[0] == gamesTalactitePosition[j][0]) {
-					//만약 종유석 위치와 겹친다면
-					errPosition = true;
-					break;
+			//끝
+			errPosition = gamePlayerPosition[1] <= 1;
+			
+			if (!errPosition) {
+				//종유석 연산
+				for (int j = 0;j < gamesTalactiteCount;j++) {
+					if ((gamePlayerPosition[1] - 1) == gamesTalactitePosition[j][1] &&
+						gamePlayerPosition[0] == gamesTalactitePosition[j][0]) {
+						//만약 종유석 위치와 겹친다면
+						errPosition = true;
+						break;
+					}
 				}
 			}
-			if (gamePlayerPosition[1] > 1 && !errPosition)
+
+			if (!errPosition) {
 				gamePlayerPosition[1] -= 1;
+			}
 			break;
 		case 'A':
 		case 'a':
-			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if (gamePlayerPosition[1] == gamesTalactitePosition[j][1] &&
-					(gamePlayerPosition[0]-1) == gamesTalactitePosition[j][0]) {
-					//만약 종유석 위치와 겹친다면
-					errPosition = true;
-					break;
+			//끝
+			errPosition = gamePlayerPosition[0] <= 1;
+
+			if (!errPosition) {
+				//종유석 연산
+				for (int j = 0;j < gamesTalactiteCount;j++) {
+					if (gamePlayerPosition[1] == gamesTalactitePosition[j][1] &&
+						(gamePlayerPosition[0] - 1) == gamesTalactitePosition[j][0]) {
+						//만약 종유석 위치와 겹친다면
+						errPosition = true;
+						break;
+					}
 				}
 			}
-			if (gamePlayerPosition[0] > 1 && !errPosition)
+
+			if (!errPosition)
 				gamePlayerPosition[0] -= 1;
 			break;
 		case 'S':
 		case 's':
-			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if ((gamePlayerPosition[1]+1) == gamesTalactitePosition[j][1] &&
-					gamePlayerPosition[0] == gamesTalactitePosition[j][0]) {
-					//만약 종유석 위치와 겹친다면
-					errPosition = true;
-					break;
+			//끝
+			errPosition = gamePlayerPosition[1] >= gameMapSize;
+
+			if (!errPosition) {
+				//종유석 연산
+				for (int j = 0;j < gamesTalactiteCount;j++) {
+					if ((gamePlayerPosition[1] + 1) == gamesTalactitePosition[j][1] &&
+						gamePlayerPosition[0] == gamesTalactitePosition[j][0]) {
+						//만약 종유석 위치와 겹친다면
+						errPosition = true;
+						break;
+					}
 				}
 			}
-			if (gamePlayerPosition[1] < gameMapSize + 1 && !errPosition)
+			if (!errPosition)
 				gamePlayerPosition[1] += 1;
 			break;
 		case 'D':
 		case 'd':
-			for (int j = 0;j < gamesTalactiteCount;j++) {
-				if (gamePlayerPosition[1] == gamesTalactitePosition[j][1] &&
-					(gamePlayerPosition[0] + 1) == gamesTalactitePosition[j][0]) {
-					//만약 종유석 위치와 겹친다면
-					errPosition = true;
-					break;
+			//끝
+			errPosition = gamePlayerPosition[0] >= gameMapSize;
+
+			if (!errPosition) {
+				//종유석 연산
+				for (int j = 0;j < gamesTalactiteCount;j++) {
+					if (gamePlayerPosition[1] == gamesTalactitePosition[j][1] &&
+						(gamePlayerPosition[0] + 1) == gamesTalactitePosition[j][0]) {
+						//만약 종유석 위치와 겹친다면
+						errPosition = true;
+						break;
+					}
 				}
 			}
-			if (gamePlayerPosition[1] < gameMapSize + 1 && !errPosition)
+
+			if (!errPosition)
 				gamePlayerPosition[0] += 1;
 			break;
 		default:
 			errPosition = 1;
 			break;
+		}
+
+		//보석 점수 수정
+		for (int j = 0;j < gameJewelryCount;j++) {
+			if (gamePlayerPosition[1] == gameJewelryPosition[j][1] &&
+				gamePlayerPosition[0] == gameJewelryPosition[j][0]) {
+				//만약 보석 위치와 겹친다면 보석의 점수 획득
+				score += gameJewelryScore[j];
+				break;
+			}
 		}
 
 		// 플레이어 위치 업로드
