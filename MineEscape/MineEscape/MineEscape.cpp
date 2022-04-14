@@ -7,15 +7,33 @@ using namespace std;
 
 int main()
 {	
-	//// 게임 난이도 설정
-	//int gameLevel[3] = {1, 2, 3};
-	//int inputGameLevel;
-	//cin >> inputGameLevel;
+	// 게임 난이도 설정 // map // sight
+	int gameLevel[3] = {1, 2, 3};
+	int inputGameLevel;
+	cin >> inputGameLevel;
 
-	char gameMap[20][20]; // map
+	switch (inputGameLevel)
+	{
+	case 1:
+		char gameMap[20][20]; // map
+		int gameMapSize = 20;
+		int gameSight = 3; // sight
+		break;
+	case 2:
+		char gameMap[20][20]; // map
+		int gameMapSize = 20;
+		int gameSight = 3; // sight
+		break;
+	case 3:
+		char gameMap[20][20]; // map
+		int gameMapSize = 20;
+		int gameSight = 3; // sight
+		break;
+	}
+
+	
 	int gameEscape[2];
 	int gamePlayerPosition[2] = { 1, 1 };
-	int gameSight[8][2] = { {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} };
 	char gameKey;
 
 	// 난수 생성, gameEscape 설정
@@ -24,22 +42,22 @@ int main()
 	gameEscape[0] = rand();
 	srand(time(NULL));
 	gameEscape[0] += rand();
-	gameEscape[0] %= 10;
+	gameEscape[0] %= 20; // map
 
 	// y축
 	srand(time(NULL));
 	gameEscape[1] = rand();
 	srand(time(NULL));
 	gameEscape[1] += rand();
-	gameEscape[1] %= 10;
+	gameEscape[1] %= 20; // map
 
 	// gameEscape = {0, 0} 제외
-	while (gameEscape[0] == 0 && gameEscape[1] == 0)
+	while (gameEscape[0] == 0 || gameEscape[1] == 0 || gameEscape[0] == 19 || gameEscape[1] == 19 || (gameEscape[0] == 1 && gameEscape[1] == 1))
 	{
 		gameEscape[0] = rand();
-		gameEscape[0] %= 10;
+		gameEscape[0] %= 20; // map
 		gameEscape[1] = rand();
-		gameEscape[1] %= 10;
+		gameEscape[1] %= 20; // map
 	}
 
 	// gameMap 초기화
@@ -57,6 +75,14 @@ int main()
 	// 플레이어 위치(gamePlayerPosition) 지정
 	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 
+	// 플레이어 초기 시야 지정
+	for (int i = -1; i < 2; i++) {
+		for (int j = -1; j < 2; j++) {
+			if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
+				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
+		}
+	}
+
 	// 초기화면 표시
 	for (int j = 0; j < 20; j++) // map
 	{
@@ -72,7 +98,14 @@ int main()
 	{
 		gameKey = _getch();
 
-		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = '#';
+		//초기화
+		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = ' ';
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == ' ')
+					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = '/';
+			}
+		}
 		// 대소문자 무관계 인식
 		if (gameKey >= 97 && gameKey <= 122) // ASCII code a = 97, z = 122
 		{
@@ -124,6 +157,14 @@ int main()
 
 		// 플레이어 위치 업로드
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
+
+		// 플레이어 시야 지정 // sight
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
+					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
+			}
+		}
 
 		// 화면 갱신
 		system("cls");
