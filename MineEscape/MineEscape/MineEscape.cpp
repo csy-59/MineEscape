@@ -77,11 +77,11 @@ int main()
 	} while (gameEscape[0] == 1 && gameEscape[1] == 1);
 
 	// gameMap 초기화
-	for (int j = 0; j < gameMapSize; j++) // map
+	for (int j = 0; j < gameMapSize + 2; j++) // map
 	{
-		for (int i = 0; i < gameMapSize; i++) // map
+		for (int i = 0; i < gameMapSize + 2; i++) // map
 		{
-			(i == 0 || j == 0 || i == gameMapSize - 1 || j == gameMapSize - 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/'; // map
+			(i == 0 || j == 0 || i == gameMapSize + 1 || j == gameMapSize + 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/'; // map
 		}
 	}
 
@@ -105,9 +105,9 @@ int main()
 	do
 	{
 		// 화면 표시
-		for (int j = 0; j < gameMapSize; j++) // map
+		for (int j = 0; j < gameMapSize + 2; j++) // map
 		{
-			for (int i = 0; i < gameMapSize; i++) // map
+			for (int i = 0; i < gameMapSize + 2; i++) // map
 			{
 				cout << gameMap[i][j];
 			}
@@ -150,7 +150,7 @@ int main()
 		}
 
 		// 이동 한계 (if문)
-		if (gamePlayerPosition[0] > gameMapSize - 2) // map
+		if (gamePlayerPosition[0] > gameMapSize) // map
 		{
 			gamePlayerPosition[0] -= 1;
 			errPosition = 1;
@@ -160,12 +160,12 @@ int main()
 			gamePlayerPosition[0] += 1;
 			errPosition = 1;
 		}
-		else if (gamePlayerPosition[1] > gameMapSize - 2) // map
+		else if (gamePlayerPosition[1] > gameMapSize) // map
 		{
 			gamePlayerPosition[1] -= 1;
 			errPosition = 1;
 		}
-		else if (gamePlayerPosition[1] < 1) // map
+		else if (gamePlayerPosition[1] < 1)
 		{
 			gamePlayerPosition[1] += 1;
 			errPosition = 1;
