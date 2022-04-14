@@ -6,8 +6,8 @@
 using namespace std;
 
 int main()
-{	
-	
+{
+
 	int inputMapLevel, inputSightLevel;
 	cin >> inputMapLevel >> inputSightLevel;
 	int gameMapSize;
@@ -15,6 +15,10 @@ int main()
 	int gameSight;
 	int gameEscape[2];
 	int gamePlayerPosition[2] = { 1, 1 };
+	int gameItem[2][4];
+	int gameItemCount = 4;
+	char wellLocation[9] = { '8','8','8','8','8','8','8','8','8' };
+
 	char gameKey;
 
 	// 게임 난이도 설정 // map // sight
@@ -44,29 +48,10 @@ int main()
 		break;
 	}
 
-	//// 난수 생성, gameEscape 설정
-	//// x축
-	//srand(time(NULL));
-	//gameEscape[0] = rand();
-	//srand(time(NULL));
-	//gameEscape[0] += rand();
-	//gameEscape[0] %= gameMapSize; // map
 
-	//// y축
-	//srand(time(NULL));
-	//gameEscape[1] = rand();
-	//srand(time(NULL));
-	//gameEscape[1] += rand();
-	//gameEscape[1] %= gameMapSize; // map
 
-	//// gameEscape = {0, 0} 제외
-	//while (gameEscape[0] == 0 || gameEscape[1] == 0 || gameEscape[0] == 19 || gameEscape[1] == 19 || (gameEscape[0] == 1 && gameEscape[1] == 1))
-	//{
-	//	gameEscape[0] = rand();
-	//	gameEscape[0] %= gameMapSize; // map
-	//	gameEscape[1] = rand();
-	//	gameEscape[1] %= gameMapSize; // map
-	//}
+
+
 
 	//탈출 위치 지정
 	do {
@@ -75,6 +60,17 @@ int main()
 		srand(time(NULL));
 		gameEscape[1] = rand() % gameMapSize + 1;
 	} while (gameEscape[0] == 1 && gameEscape[1] == 1);
+
+	//아이템 위치 지정
+	for (int i = 0; i < gameItemCount; i++) {
+		do {
+			gameItem[0][i] = rand() % gameMapSize + 1;
+			gameItem[1][i] = rand() % gameMapSize + 1;
+		} while (gameItem[0][i] == 1 && gameItem[1][i] == 1);
+	}
+
+
+
 
 	// gameMap 초기화
 	for (int j = 0; j < gameMapSize + 2; j++) // map
@@ -88,6 +84,11 @@ int main()
 	// 탈출지점(gameEscape) 저장
 	gameMap[gameEscape[0]][gameEscape[1]] = 'E';
 
+	for (int i = 0; i < gameItemCount; i++) {
+		gameMap[gameItem[0][i]][gameItem[1][i]] = 'I';
+	}
+
+
 	// 플레이어 위치(gamePlayerPosition) 지정
 	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 
@@ -98,6 +99,8 @@ int main()
 				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 		}
 	}
+
+
 
 	// 이동 및 화면 갱신 
 	do
@@ -120,26 +123,26 @@ int main()
 					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = '/';
 			}
 		}
-		// 대소문자 무관계 인식
-		if (gameKey >= 97 && gameKey <= 122) // ASCII code a = 97, z = 122
-		{
-			gameKey -= 32;
-		}
+
 		bool errPosition = 0; // 이동불가 에러 표시용
-		
+
 		// 플레이어 위치 변경 (switch문)
 		switch (gameKey)
 		{
 		case 'W':
+		case 'w':
 			gamePlayerPosition[1] -= 1;
 			break;
 		case 'A':
+		case 'a':
 			gamePlayerPosition[0] -= 1;
 			break;
 		case 'S':
+		case 's':
 			gamePlayerPosition[1] += 1;
 			break;
 		case 'D':
+		case 'd':
 			gamePlayerPosition[0] += 1;
 			break;
 		default:
@@ -169,8 +172,7 @@ int main()
 			errPosition = 1;
 		}
 
-		// 플레이어 위치 업로드
-		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
+
 
 		// 플레이어 시야 지정 // sight
 		for (int i = -1 * gameSight; i < gameSight + 1; i++) {
@@ -179,9 +181,21 @@ int main()
 					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 			}
 		}
+		//우물 위치 지정
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				gameMap[(gameMapSize / 2) + i][(gameMapSize / 2) + j] = wellLocation[i + j];
+			}
+		}
+		// 플레이어 위치 업로드
+		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
+		for (int i = 0; i < gameItemCount; i++)
+			if (gamePlayerPosition[0] == gameItem[0][i] && gamePlayerPosition[1] == gameItem[1][i]) {
+				gameSight+=2;
+			}
 
-		// 화면 갱신
-		system("cls");
+				// 화면 갱신
+				system("cls");
 
 		// cout << gamePlayerPosition[0] << gamePlayerPosition[1] << endl;
 		// 이동 한계 출력
