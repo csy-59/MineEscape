@@ -131,7 +131,7 @@ int main()
 			if ((gamesTalactitePosition[i][0] == 1 && gamesTalactitePosition[i][1] == 1))
 				isStalactitePossible = false;
 
-			if ((gamesTalactitePosition[i][0] == gameEscape[0] && gamesTalactitePosition[i][1] == gameEscape[1]))
+			if ((gamesTalactitePosition[i][0] == gameEscape[1] && gamesTalactitePosition[i][1] == gameEscape[0]))
 				isStalactitePossible = false;
 
 			for (int j = 0;j < i;j++) {
@@ -164,7 +164,7 @@ int main()
 			if ((gameJewelryPosition[i][0] == 1 && gameJewelryPosition[i][1] == 1))
 				isJewelryPossible = false;
 
-			if ((gameJewelryPosition[i][0] == gameEscape[0] && gameJewelryPosition[i][1] == gameEscape[1]))
+			if ((gameJewelryPosition[i][0] == gameEscape[1] && gameJewelryPosition[i][1] == gameEscape[0]))
 				isJewelryPossible = false;
 
 			for (int j = 0;j < gamesTalactiteCount;j++) {
@@ -199,13 +199,10 @@ int main()
 
 	//회복 우물 위치
 
-		bool errPosition = 0;
-	//게임
-	do {
-		// 화면 갱신
-		system("cls");
-		
-		// 초기화면 표시
+	// 이동 및 화면 갱신 
+	do
+	{
+		// 화면 표시
 		for (int j = 0; j < gameMapSize + 2; j++) // map
 		{
 			for (int i = 0; i < gameMapSize + 2; i++) // map
@@ -214,87 +211,94 @@ int main()
 			}
 			cout << endl;
 		}
-		gameKey = ' ';
-		// 이동 한계 출력
-		if (gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] == 'T' || errPosition == 1)
-			cout << "이동 불가" << endl;
-		else
-			cout << gameKey << endl;
-
 		gameKey = _getch();
-	
-		// 대소문자 무관계 인식
-		if (gameKey >= 97 && gameKey <= 122) // ASCII code a = 97, z = 122
-		{
-			gameKey -= 32;
+		// 초기화
+		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = ' ';
+		for (int i = -1 * gameSight; i < gameSight + 1; i++) {								// sight
+			for (int j = -1 * gameSight; j < gameSight + 1; j++) {							// sight
+				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == ' ')
+					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = '/';
+			}
 		}
+
+		bool errPosition = 0; // 이동불가 에러 표시용
 
 		// 플레이어 위치 변경 (switch문)
 		switch (gameKey)
 		{
 		case 'W':
-			gamePlayerPosition[1] -= 1;
+		case 'w':
+			for (int j = 0;j < gamesTalactiteCount;j++) {
+				if ((gamePlayerPosition[1] - 1) == gamesTalactitePosition[j][0] &&
+					gamePlayerPosition[0] == gamesTalactitePosition[j][1]) {
+					//만약 종유석 위치와 겹친다면
+					errPosition = true;
+					break;
+				}
+			}
+			if (gamePlayerPosition[1] > 1 && !errPosition)
+				gamePlayerPosition[1] -= 1;
 			break;
 		case 'A':
-			gamePlayerPosition[0] -= 1;
+		case 'a':
+			for (int j = 0;j < gamesTalactiteCount;j++) {
+				if (gamePlayerPosition[1] == gamesTalactitePosition[j][0] &&
+					(gamePlayerPosition[0]-1) == gamesTalactitePosition[j][1]) {
+					//만약 종유석 위치와 겹친다면
+					errPosition = true;
+					break;
+				}
+			}
+			if (gamePlayerPosition[0] > 1 && !errPosition)
+				gamePlayerPosition[0] -= 1;
 			break;
 		case 'S':
-			gamePlayerPosition[1] += 1;
+		case 's':
+			for (int j = 0;j < gamesTalactiteCount;j++) {
+				if ((gamePlayerPosition[1]+1) == gamesTalactitePosition[j][0] &&
+					gamePlayerPosition[0] == gamesTalactitePosition[j][1]) {
+					//만약 종유석 위치와 겹친다면
+					errPosition = true;
+					break;
+				}
+			}
+			if (gamePlayerPosition[1] < gameMapSize + 1 && !errPosition)
+				gamePlayerPosition[1] += 1;
 			break;
 		case 'D':
-			gamePlayerPosition[0] += 1;
+		case 'd':
+			for (int j = 0;j < gamesTalactiteCount;j++) {
+				if (gamePlayerPosition[1] == gamesTalactitePosition[j][0] &&
+					(gamePlayerPosition[0] + 1) == gamesTalactitePosition[j][1]) {
+					//만약 종유석 위치와 겹친다면
+					errPosition = true;
+					break;
+				}
+			}
+			if (gamePlayerPosition[1] < gameMapSize + 1 && !errPosition)
+				gamePlayerPosition[0] += 1;
 			break;
 		default:
 			errPosition = 1;
 			break;
 		}
 
-		// 이동 한계 (if문)
-		if (gamePlayerPosition[0] > 18) // map
-		{
-			gamePlayerPosition[0] -= 1;
-			errPosition = 1;
-		}
-		else if (gamePlayerPosition[0] < 1)
-		{
-			gamePlayerPosition[0] += 1;
-			errPosition = 1;
-		}
-		else if (gamePlayerPosition[1] > 18) // map
-		{
-			gamePlayerPosition[1] -= 1;
-			errPosition = 1;
-		}
-		else if (gamePlayerPosition[1] < 1) // map
-		{
-			gamePlayerPosition[1] += 1;
-			errPosition = 1;
-		}
-
 		// 플레이어 위치 업로드
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 
 		// 플레이어 시야 지정 // sight
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
+		for (int i = -1 * gameSight; i < gameSight + 1; i++) {
+			for (int j = -1 * gameSight; j < gameSight + 1; j++) {
 				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
 					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 			}
 		}
 
-		// cout << gamePlayerPosition[0] << gamePlayerPosition[1] << endl;
+		// 화면 갱신
+		system("cls");
 
-		for (int j = 0; j < 20; j++) // map
-		{
-			for (int i = 0; i < 20; i++) // map
-			{
-				cout << gameMap[i][j];
-			}
-			cout << endl;
-
-		}	
-	
 	} while (gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1]);
+
 
 	cout << "탈출에 성공했습니다." << endl;
 }
