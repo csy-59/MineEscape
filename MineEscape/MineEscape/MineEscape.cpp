@@ -8,9 +8,9 @@ using namespace std;
 int main()
 {
 
-	char gameMap[42][42] = { '/' }; //맵
+	char gameMap[45][45] = { '/' }; //맵 // 맵 최대 사이즈 +2 (경계선) +3 (level3에서의 배열 오버스택? 방지용)
 	int gameMapSize; //맵 크기
-	int gameSight = 2; //시야 크기
+	int gameSight = 3; //시야 크기
 
 	int gameEscape[2];	//출구 위치
 	int gamePlayerPosition[2] = { 1, 1 }; //플레이어 위치
@@ -24,7 +24,7 @@ int main()
 	int gameJewelryPosition[7][2]; // 보석 위치 배열
 	int gameJewelryScore[7]; // 보석 위치 배열
 
-	int gameItem[2][4];	//아이템 위치 배열
+	int gameItem[4][2];	//아이템 위치 배열 // 갯수 변경 - Level3에서의 갯수 부족
 	int gameItemCount = 4; //아이템 개수
 
 	char well = '#';
@@ -35,6 +35,8 @@ int main()
 	bool gameClear = 1;
 	int score = 0;
 	int walk = 0;
+
+	int setPosition[20][2] = { { 0, 0 } }; // 중복하지 않는 랜덤 좌표를 기록하기 위한 이중배열
 
 	// 게임 난이도 설정 // map // sight
 	cout << "=================" << endl;
@@ -48,15 +50,15 @@ int main()
 		{
 		case 1:
 			gameMapSize = 20;
-			gamesTalactiteCount = 4;
-			gameJewelryCount = 5;
+			gamesTalactiteCount = 5;
+			gameJewelryCount = 4;
 			//gameSight = 5; // sight
 			gameItemCount = 1;
 			break;
 		case 2:
 			gameMapSize = 30;
-			gamesTalactiteCount = 5;
-			gameJewelryCount = 6;
+			gamesTalactiteCount = 6;
+			gameJewelryCount = 5;
 			//gameSight = 4; // sight
 			gameItemCount = 2;
 			break;
@@ -72,19 +74,32 @@ int main()
 			break;
 		}
 	} while (inputGameLevel > 3 || inputGameLevel < 1);
-	
+
 	cout << "로딩중..." << endl;
+
+	// 랜덤 좌표 20개 저장
+
+	/*for (int j = 0; j < 20; j++)
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			do {
+				setPosition[j][0] = rand() % gameMapSize + 1;
+				setPosition[j][1] = rand() % gameMapSize + 1;
+			} while (setPosition[j][0] == setPosition[i][0] && setPosition[j][1] == setPosition[i][1]);
+		}
+	}*/
 
 	//탈출 위치 지정
 	bool isExitPossibile = true;
 	do {
 		srand(time(NULL));
-		gameEscape[0] = rand() % gameMapSize + 1;
-		gameEscape[1] = rand() % gameMapSize + 1;
+		gameEscape[0] = rand() % (gameMapSize / 2) + gameMapSize / 2; // 시작 지점으로부터 먼 쪽에 랜덤으로 생기도록 지정
+		gameEscape[1] = rand() % (gameMapSize / 2) + gameMapSize / 2;
 
 		//플레이어 초기위치 판별
-		if ((gameEscape[0] == 1 && gameEscape[1] == 1))
-			isExitPossibile = false;
+		/*if ((gameEscape[0] == 1 && gameEscape[1] == 1))
+			isExitPossibile = false;*/
 
 	} while (!isExitPossibile);
 
@@ -92,10 +107,10 @@ int main()
 	isExitPossibile = true;
 	do {
 		srand(time(NULL));
-		wellLocation[0] = rand() % (gameMapSize / 3) + gameMapSize / 3 + 1;
+		wellLocation[0] = rand() % (gameMapSize / 3) + gameMapSize / 3 + 1; // 맵 가운데를 영역으로 하여 되도록 겹치지 않도록 지정
 		wellLocation[1] = rand() % (gameMapSize / 3) + gameMapSize / 3 + 1;
-		
-		//플레이어 초기위치 판별
+
+		// 탈출 위치 판별
 		if ((wellLocation[0] == 1 && wellLocation[1] == 1) || (gameEscape[0] == wellLocation[0] && gameEscape[1] == wellLocation[1]))
 			isExitPossibile = false;
 
@@ -106,15 +121,15 @@ int main()
 	//종유석 위치
 	for (int i = 0; i < gamesTalactiteCount; i++) {
 		bool isStalactitePossible = true;
+						
 		do {
 			isStalactitePossible = true;
 			srand(time(NULL));
-			gamesTalactitePosition[i][0] = rand() % gameMapSize + 1;
-			gamesTalactitePosition[i][1] = rand() % gameMapSize + 1;
+			gamesTalactitePosition[i][0] = wellLocation[0] + rand() % (2 * gameMapSize / 3); // 우물 위치를 기준으로 우물과 탈출 지점 사이 거리의 범위에 위치를 지정 - 우물과 겹치지 않게
+			gamesTalactitePosition[i][1] = wellLocation[1] + rand() % (2 * gameMapSize / 3);
 
-			//플레이어 초기위치 판별
-			if ((gamesTalactitePosition[i][0] == 1 && gamesTalactitePosition[i][1] == 1) &&
-				(gamesTalactitePosition[i][0] == wellLocation[0] && gamesTalactitePosition[i][1] == wellLocation[1]))
+			//우물 위치 판별
+			if (gamesTalactitePosition[i][0] == wellLocation[0] && gamesTalactitePosition[i][1] == wellLocation[1])
 				isStalactitePossible = false;
 
 			//탈출 위치 판별
@@ -137,19 +152,17 @@ int main()
 	for (int i = 0; i < gameJewelryCount; i++) {
 
 		bool isJewelryPossible = true;
-
 		do {
 			isJewelryPossible = true;
 
 			srand(time(NULL));
-			gameJewelryPosition[i][0] = rand() % gameMapSize + 1;
-			gameJewelryPosition[i][1] = rand() % gameMapSize + 1;
+			gameJewelryPosition[i][0] = gamesTalactitePosition[i][0] + (rand() % (gameMapSize / 10) + 1); // 종유석 위치를 기준으로 위치를 지정 - 종유석과 겹치지 않게
+			gameJewelryPosition[i][1] = gamesTalactitePosition[i][0] + (rand() % (gameMapSize / 10) + 1);
 
-			if ((gamesTalactitePosition[i][0] == 1 && gamesTalactitePosition[i][1] == 1) &&
-				(gamesTalactitePosition[i][0] == wellLocation[0] && gamesTalactitePosition[i][1] == wellLocation[1]))
+			if (gamesTalactitePosition[i][0] == wellLocation[0] && gamesTalactitePosition[i][1] == wellLocation[1])
 				isJewelryPossible = false;
 
-			if ((gameJewelryPosition[i][1] == gameEscape[1] && gameJewelryPosition[i][0] == gameEscape[0]))
+			if (gameJewelryPosition[i][1] == gameEscape[1] && gameJewelryPosition[i][0] == gameEscape[0])
 				isJewelryPossible = false;
 
 			for (int j = 0; j < gamesTalactiteCount; j++) {
@@ -183,21 +196,19 @@ int main()
 	for (int i = 0; i < gameItemCount; i++) {
 
 		bool isItemPossible = true;
-
 		do {
 			isItemPossible = true;
 
 			srand(time(NULL));
-			gameItem[i][0] = rand() % gameMapSize + 1;
-			gameItem[i][1] = rand() % gameMapSize + 1;
+			gameItem[i][0] = wellLocation[0] + (rand() % (gameMapSize / 5) + 1); // 우물 위치를 기준으로 위치를 지정 - 우물과 겹치지 않게
+			gameItem[i][1] = wellLocation[0] + (rand() % (gameMapSize / 5) + 1);
 
-			//플레이어/우물 위치 판별
-			if ((gameItem[i][0] == 1 && gameItem[i][1] == 1) &&
-				(gameItem[i][0] == wellLocation[0] && gameItem[i][1] == wellLocation[1]))
+			// 우물 위치 판별
+			if (gameItem[i][0] == wellLocation[0] && gameItem[i][1] == wellLocation[1])
 				isItemPossible = false;
 
 			//탈출 판별
-			if ((gameItem[i][1] == gameEscape[1] && gameItem[i][0] == gameEscape[0]))
+			if (gameItem[i][1] == gameEscape[1] && gameItem[i][0] == gameEscape[0])
 				isItemPossible = false;
 
 			//종유석 판별
@@ -224,13 +235,13 @@ int main()
 			for (int j = 0; j < i; j++) {
 				if (gameItem[i][0] == gameJewelryPosition[j][0] &&
 					gameItem[i][1] == gameJewelryPosition[j][1]) {
-					//만약 보석 위치와 겹친다면
+					//만약 아이템 위치와 겹친다면
 					isItemPossible = false;
 					break;
 				}
 			}
 		} while (!isItemPossible);
-		//보석의 위치가 플레이어/탈출 위치/벽/다른 종유석/시아 위치가 아닐 경우 저장 완료.
+		//아이템의 위치가 플레이어/탈출 위치/벽/다른 종유석/시야 위치가 아닐 경우 저장 완료.
 	}
 
 
