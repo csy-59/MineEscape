@@ -10,6 +10,7 @@ int main()
 
 	int inputMapLevel, inputSightLevel;
 	cin >> inputMapLevel >> inputSightLevel;
+	bool gameClear = 1;
 	int gameMapSize;
 	char gameMap[42][42] = { ' ' };
 	int gameSight;
@@ -205,9 +206,15 @@ int main()
 		// cout << gamePlayerPosition[0] << gamePlayerPosition[1] << endl;
 		// 이동 한계 출력
 		errPosition == 1 ? cout << "이동 불가" << endl : cout << gameKey << "\t" << gamePlayerChance << endl;
+
+		if (gamePlayerChance == 0) // 스테미나 0 되면 게임 오버
+		{
+			gameClear = 0;
+			break;
+		}
 		
 		
 	} while (gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1]);
 
-	cout << "탈출에 성공했습니다." << endl;
+	gameClear ? cout << "탈출에 성공했습니다." << endl : cout << "탈출에 실패했습니다." << endl;
 }
