@@ -82,7 +82,7 @@ int main()
 	{
 		for (int i = 0; i < gameMapSize + 2; i++) // map
 		{
-			(i == 0 || j == 0 || i == gameMapSize + 1 || j == gameMapSize + 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '/'; // map
+			(i == 0 || j == 0 || i == gameMapSize + 1 || j == gameMapSize + 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '='; // map
 		}
 	}
 
@@ -93,14 +93,13 @@ int main()
 	// 플레이어 시야 지정 // sight
 	for (int i = -1 * gameSight; i < gameSight + 1; i++) {
 		for (int j = -1 * gameSight; j < gameSight + 1; j++) {
-			if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
+			if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '=')
 				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 		}
 	}
 
 	//우물 위치 지정
 	gameMap[wellLocation][wellLocation] = well;
-
 
 	//탈출 위치 지정
 	bool isExitPossibile = true;
@@ -257,12 +256,10 @@ int main()
 		gameMap[gameItem[i][0]][gameItem[i][1]] = 'F';
 	}
 
-	system("cls");
 	// 이동 및 화면 갱신 
+	system("cls");
 	do
 	{
-	//cout << gameEscape[0] << " " << gameEscape[1] << endl;
-	//cout << gamePlayerPosition[0] << " " << gamePlayerPosition[1] << endl;
 		// 화면 표시
 		for (int j = 0; j < gameMapSize + 2; j++) // map
 		{
@@ -278,15 +275,6 @@ int main()
 		cout << "walk: " << walk << endl;
 
 		gameKey = _getch();
-
-		// 초기화
-		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = ' ';
-		for (int i = -1 * gameSight; i < gameSight + 1; i++) {								// sight
-			for (int j = -1 * gameSight; j < gameSight + 1; j++) {							// sight
-				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == ' ')
-					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = '/';
-			}
-		}
 
 		bool errPosition = 0; // 이동불가 에러 표시용
 
@@ -312,6 +300,7 @@ int main()
 
 			if (!errPosition) {
 				gamePlayerPosition[1] -= 1;
+				gamePlayerChance--;
 				walk++;
 			}
 			break;
@@ -334,6 +323,7 @@ int main()
 
 			if (!errPosition) {
 				gamePlayerPosition[0] -= 1;
+				gamePlayerChance--;
 				walk++;
 			}
 			break;
@@ -355,6 +345,7 @@ int main()
 			}
 			if (!errPosition) {
 				gamePlayerPosition[1] += 1;
+				gamePlayerChance--;
 				walk++;
 			}
 			break;
@@ -377,6 +368,7 @@ int main()
 
 			if (!errPosition) {
 				gamePlayerPosition[0] += 1;
+				gamePlayerChance--;
 				walk++;
 			}
 			break;
@@ -395,15 +387,66 @@ int main()
 			}
 		}
 
+		//아이템 획득(시아 확장)
+		for (int i = 0; i < gameItemCount; i++) {
+			if (gamePlayerPosition[0] == gameItem[0][i] && gamePlayerPosition[1] == gameItem[1][i]) {
+				gameSight++;
+			}
+		}
+
+		//우물 접촉(스테미너 회복)
+		if (gamePlayerPosition[1] == wellLocation && gamePlayerPosition[0] == wellLocation) {
+			gamePlayerChance = gameMapSize * 2;
+		}
+
+		// gameMap 초기화
+		for (int j = 0; j < gameMapSize + 2; j++) // map
+		{
+			for (int i = 0; i < gameMapSize + 2; i++) // map
+			{
+				(i == 0 || j == 0 || i == gameMapSize + 1 || j == gameMapSize + 1) ? gameMap[j][i] = '*' : gameMap[j][i] = '='; // map
+			}
+		}
+
 		// 플레이어 위치 업로드
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 
 		// 플레이어 시야 지정 // sight
 		for (int i = -1 * gameSight; i < gameSight + 1; i++) {
 			for (int j = -1 * gameSight; j < gameSight + 1; j++) {
-				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
+				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '=')
 					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 			}
+		}
+
+		//우물 위치 지정
+		gameMap[wellLocation][wellLocation] = well;
+
+		// 탈출지점(gameEscape) 지정
+		gameMap[gameEscape[0]][gameEscape[1]] = 'E';
+
+		//종유석 지정
+		for (int i = 0;i < gamesTalactiteCount;i++) {
+			gameMap[gamesTalactitePosition[i][0]][gamesTalactitePosition[i][1]] = 'T';
+		}
+
+		//보석 지정
+		for (int i = 0;i < gameJewelryCount;i++) {
+			gameMap[gameJewelryPosition[i][0]][gameJewelryPosition[i][1]] = 'J';
+		}
+
+		//아이템 지정
+		for (int i = 0;i < gameItemCount;i++) {
+			gameMap[gameItem[i][0]][gameItem[i][1]] = 'F';
+		}
+
+		// 이동 한계 출력
+		errPosition == 1 ? cout << "이동 불가" << endl : cout << gameKey << "\t" << gamePlayerChance << endl;
+
+		if (gamePlayerChance == 0) // 스테미나 0 되면 게임 오버
+		{
+			gameClear = 0;
+			break;
 		}
 
 		// 화면 갱신
