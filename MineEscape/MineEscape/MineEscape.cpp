@@ -5,6 +5,7 @@
 #include <conio.h>
 using namespace std;
 
+
 int main()
 {
     int playerX, playerY, escapeX, escapeY, inputKey;
@@ -13,7 +14,7 @@ int main()
     escapeY = rand() % 9 + 1;
     playerX = 1;
     playerY = 1;
-    char array[11][11] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+    char array[12][12] = {};
     char playerSight = ' ';
 
     while (1) {
@@ -24,18 +25,23 @@ int main()
         }
         
         
-
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 array[playerX + i][playerY + j] = playerSight;
+            }
+        }
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
+                if((i==0 || i==11) || (j==0) || (j==11))
+                array[i][j] = '*';
             }
             
         }
         array[escapeX][escapeY] = 'E';
         array[playerX][playerY] = 'O';
-
-        for (int i = 0; i < 11; i++) {
-            for (int j = 0; j < 11; j++) {
+        
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
                 cout << (char)array[i][j];
             }
             cout << endl;
