@@ -18,14 +18,14 @@ int main()
 	int inputGameLevel; //난이도 입력
 
 	int gamesTalactiteCount; //종유석 개수
-	int gamesTalactitePosition[7][2]; //종유석 위치 배열
+	int gamesTalactitePosition[10][2]; //종유석 위치 배열
 
 	int gameJewelryCount; //보석 개수
-	int gameJewelryPosition[7][2]; // 보석 위치 배열
-	int gameJewelryScore[7]; // 보석 위치 배열
+	int gameJewelryPosition[10][2]; // 보석 위치 배열
+	int gameJewelryScore[10]; // 보석 위치 배열
 
-	int gameItemPosition[4][2];	//아이템 위치 배열 // 갯수 변경 - Level3에서의 갯수 부족
-	int gameItemCount = 4; //아이템 개수
+	int gameItemPosition[6][2];	//아이템 위치 배열 // 갯수 변경 - Level3에서의 갯수 부족
+	int gameItemCount = 6; //아이템 개수
 
 	char well = '#';
 	int gamePlayerChance;
@@ -36,7 +36,8 @@ int main()
 	int score = 0;
 	int walk = 0;
 
-	int setPosition[20][2] = { { 0, 0 } }; // 중복하지 않는 랜덤 좌표를 기록하기 위한 이중배열
+	int setPosition[30][2] = { { 0, 0 } }; // 중복하지 않는 랜덤 좌표를 기록하기 위한 이중배열
+	int plusStamina = 0; // 스테미너 난이도 조절
 
 	// 게임 난이도 설정 // map // sight
 	cout << "=================" << endl;
@@ -54,20 +55,23 @@ int main()
 			gameJewelryCount = 5;
 			//gameSight = 5; // sight
 			gameItemCount = 1;
+			plusStamina = 7;
 			break;
 		case 2:
 			gameMapSize = 30;
-			gamesTalactiteCount = 5;
-			gameJewelryCount = 6;
+			gamesTalactiteCount = 7;
+			gameJewelryCount = 7;
 			//gameSight = 4; // sight
 			gameItemCount = 2;
+			plusStamina = 12;
 			break;
 		case 3:
 			gameMapSize = 40;
-			gamesTalactiteCount = 7;
-			gameJewelryCount = 7;
+			gamesTalactiteCount = 10;
+			gameJewelryCount = 10;
 			//gameSight = 3; // sight
-			gameItemCount = 4;
+			gameItemCount = 6;
+			plusStamina = 22;
 			break;
 		default:
 			cout << "잘못된 입력" << endl;
@@ -78,9 +82,9 @@ int main()
 	cout << "로딩중..." << endl;
 	srand(time(NULL));
 	// 랜덤 좌표 20개 저장
-	for (int j = 0; j < 20; j++)
+	for (int j = 0; j < 30; j++)
 	{
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 30; i++)
 		{
 			do {
 				setPosition[j][0] = rand() % gameMapSize + 1;
@@ -99,7 +103,7 @@ int main()
 			
 		
 	}*/
-	for (int i = 0; i < 20; i++)	// 우물을 가운데 영역(3*3등분 기준)에 가능한 한 배치
+	for (int i = 0; i < 30; i++)	// 우물을 가운데 영역(3*3등분 기준)에 가능한 한 배치
 	{
 		if (setPosition[i][0] > gameMapSize / 3 && setPosition[i][0] < 2 * gameMapSize / 3 &&
 			setPosition[i][1] > gameMapSize / 3 && setPosition[i][1] < 2 * gameMapSize / 3)
@@ -111,11 +115,11 @@ int main()
 				setPosition[j][0] = setPosition[j + 1][0];
 				setPosition[j][1] = setPosition[j + 1][1];
 			}
-			setPosition[19][0] = 0;
-			setPosition[19][1] = 0;
+			setPosition[29][0] = 0;
+			setPosition[29][1] = 0;
 			break;
 		}
-		else if (i == 19)
+		else if (i == 29)
 		{
 			wellLocation[0] = setPosition[i][0];
 			wellLocation[1] = setPosition[i][1];
@@ -149,7 +153,7 @@ int main()
 	}
 
 	// 최소 이동거리
-	gamePlayerChance = (wellLocation[0] + wellLocation[1]) + 7;
+	gamePlayerChance = (wellLocation[0] + wellLocation[1]) + plusStamina;
 
 	////탈출 위치 지정
 	//bool isExitPossibile = true;
@@ -499,7 +503,7 @@ int main()
 
 		//우물 접촉(스테미너 회복)
 		if (gamePlayerPosition[1] == wellLocation[1] && gamePlayerPosition[0] == wellLocation[0]) {
-			gamePlayerChance = gameMapSize;
+			gamePlayerChance = (wellLocation[0] + wellLocation[1]) + plusStamina; // 초기 스테미너로 회복
 		}
 
 		// gameMap 초기화
