@@ -83,14 +83,14 @@ int main()
 		srand(time(NULL));
 		gameEscape[0] = rand() % gameMapSize + 1;
 		gameEscape[1] = rand() % gameMapSize + 1;
-		// 최소 이동거리
-		gamePlayerChance = (gameEscape[1] + gameEscape[0]);
 
 		//플레이어 초기위치 판별
 		if ((gameEscape[0] == 1 && gameEscape[1] == 1) && (gameEscape[0] == wellLocation && gameEscape[1] == wellLocation))
 			isExitPossibile = false;
 
 	} while (!isExitPossibile);
+	// 최소 이동거리
+	gamePlayerChance = (gameEscape[1] + gameEscape[0]) + 3;
 
 	//종유석 위치
 	for (int i = 0; i < gamesTalactiteCount; i++) {
