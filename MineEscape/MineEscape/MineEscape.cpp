@@ -199,7 +199,7 @@ int main()
 		if (gamePlayerPosition[0] == gameMapSize/2 && gamePlayerPosition[1] == gameMapSize / 2) {
 			gamePlayerChance = gameMapSize * 2;
 		}
-
+		 
 				// 화면 갱신
 				system("cls");
 
