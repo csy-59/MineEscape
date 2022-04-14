@@ -92,16 +92,14 @@ int main()
 	gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = 'O';
 
 	// 플레이어 초기 시야 지정
-	for (int i = -1; i < 2; i++) {
-		for (int j = -1; j < 2; j++) {
+	for (int i = -1 * gameSight; i < gameSight + 1; i++) {				// sight
+		for (int j = -1 * gameSight; j < gameSight + 1; j++) {			// sight
 			if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == '/')
 				gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = ' ';
 		}
 	}
-	
-	
 
-	// 이동 및 화면 갱신
+	// 이동 및 화면 갱신 
 	do
 	{
 		// 화면 표시
@@ -114,10 +112,10 @@ int main()
 			cout << endl;
 		}
 		gameKey = _getch();
-		//초기화
+		// 초기화
 		gameMap[gamePlayerPosition[0]][gamePlayerPosition[1]] = ' ';
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
+		for (int i = -1 * gameSight; i < gameSight + 1; i++) {								// sight
+			for (int j = -1 * gameSight; j < gameSight + 1; j++) {							// sight
 				if (gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] == ' ')
 					gameMap[gamePlayerPosition[0] + i][gamePlayerPosition[1] + j] = '/';
 			}
