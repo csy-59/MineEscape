@@ -18,7 +18,7 @@ int main()
 	int inputGameLevel; //난이도 입력
 
 	int gamesTalactiteCount; //종유석 개수
-	int gamesTalactitePosition[5][2]; //종유석 위치 배열
+	int gamesTalactitePosition[7][2]; //종유석 위치 배열
 
 	int gameJewelryCount; //보석 개수
 	int gameJewelryPosition[7][2]; // 보석 위치 배열
@@ -29,7 +29,7 @@ int main()
 
 	char well = '#';
 	int gamePlayerChance;
-	int wellLocation;
+	int wellLocation[2];
 
 	int gameJewelryBasicSocre[3] = { 100,200,300 };//보석 기본 점수(여기서 랜덤으로 배정)
 	bool gameClear = 1;
@@ -72,9 +72,7 @@ int main()
 			break;
 		}
 	} while (inputGameLevel > 3 || inputGameLevel < 1);
-
-	wellLocation = gameMapSize / 2;
-
+	
 	cout << "로딩중..." << endl;
 
 	//탈출 위치 지정
@@ -83,14 +81,27 @@ int main()
 		srand(time(NULL));
 		gameEscape[0] = rand() % gameMapSize + 1;
 		gameEscape[1] = rand() % gameMapSize + 1;
-		// 최소 이동거리
-		gamePlayerChance = (gameEscape[1] + gameEscape[0]);
 
 		//플레이어 초기위치 판별
-		if ((gameEscape[0] == 1 && gameEscape[1] == 1) && (gameEscape[0] == wellLocation && gameEscape[1] == wellLocation))
+		if ((gameEscape[0] == 1 && gameEscape[1] == 1))
 			isExitPossibile = false;
 
 	} while (!isExitPossibile);
+
+	// 우물 위치 지정
+	isExitPossibile = true;
+	do {
+		srand(time(NULL));
+		wellLocation[0] = rand() % (gameMapSize / 3) + gameMapSize / 3 + 1;
+		wellLocation[1] = rand() % (gameMapSize / 3) + gameMapSize / 3 + 1;
+		
+		//플레이어 초기위치 판별
+		if ((wellLocation[0] == 1 && wellLocation[1] == 1) || (gameEscape[0] == wellLocation[0] && gameEscape[1] == wellLocation[1]))
+			isExitPossibile = false;
+
+	} while (!isExitPossibile);
+	// 최소 이동거리
+	gamePlayerChance = (wellLocation[0] + wellLocation[1]) + 7;
 
 	//종유석 위치
 	for (int i = 0; i < gamesTalactiteCount; i++) {
@@ -103,7 +114,7 @@ int main()
 
 			//플레이어 초기위치 판별
 			if ((gamesTalactitePosition[i][0] == 1 && gamesTalactitePosition[i][1] == 1) &&
-				(gamesTalactitePosition[i][0] == wellLocation && gamesTalactitePosition[i][1] == wellLocation))
+				(gamesTalactitePosition[i][0] == wellLocation[0] && gamesTalactitePosition[i][1] == wellLocation[1]))
 				isStalactitePossible = false;
 
 			//탈출 위치 판별
@@ -135,7 +146,7 @@ int main()
 			gameJewelryPosition[i][1] = rand() % gameMapSize + 1;
 
 			if ((gamesTalactitePosition[i][0] == 1 && gamesTalactitePosition[i][1] == 1) &&
-				(gamesTalactitePosition[i][0] == wellLocation && gamesTalactitePosition[i][1] == wellLocation))
+				(gamesTalactitePosition[i][0] == wellLocation[0] && gamesTalactitePosition[i][1] == wellLocation[1]))
 				isJewelryPossible = false;
 
 			if ((gameJewelryPosition[i][1] == gameEscape[1] && gameJewelryPosition[i][0] == gameEscape[0]))
@@ -182,7 +193,7 @@ int main()
 
 			//플레이어/우물 위치 판별
 			if ((gameItem[i][0] == 1 && gameItem[i][1] == 1) &&
-				(gameItem[i][0] == wellLocation && gameItem[i][1] == wellLocation))
+				(gameItem[i][0] == wellLocation[0] && gameItem[i][1] == wellLocation[1]))
 				isItemPossible = false;
 
 			//탈출 판별
@@ -246,8 +257,8 @@ int main()
 	}
 
 	//우물 위치 지정
-	if (gameMap[wellLocation][wellLocation] == ' ')
-		gameMap[wellLocation][wellLocation] = well;
+	if (gameMap[wellLocation[0]][wellLocation[1]] == ' ')
+		gameMap[wellLocation[0]][wellLocation[1]] = well;
 
 	// 탈출지점(gameEscape) 지정
 	if (gameMap[gameEscape[0]][gameEscape[1]] == ' ')
@@ -415,7 +426,7 @@ int main()
 		}
 
 		//우물 접촉(스테미너 회복)
-		if (gamePlayerPosition[1] == wellLocation && gamePlayerPosition[0] == wellLocation) {
+		if (gamePlayerPosition[1] == wellLocation[1] && gamePlayerPosition[0] == wellLocation[0]) {
 			gamePlayerChance = gameMapSize;
 		}
 
@@ -440,8 +451,8 @@ int main()
 		}
 
 		//우물 위치 지정
-		if (gameMap[wellLocation][wellLocation] == ' ')
-			gameMap[wellLocation][wellLocation] = well;
+		if (gameMap[wellLocation[0]][wellLocation[1]] == ' ')
+			gameMap[wellLocation[0]][wellLocation[1]] = well;
 
 		// 탈출지점(gameEscape) 지정
 		if (gameMap[gameEscape[0]][gameEscape[1]] == ' ')
@@ -479,6 +490,7 @@ int main()
 
 	} while (gamePlayerPosition[0] != gameEscape[0] || gamePlayerPosition[1] != gameEscape[1]);
 
+	system("cls");
 	cout << "====================" << endl;
 	gameClear ? cout << "탈출에 성공했습니다." << endl : cout << "탈출에 실패했습니다." << endl;
 	cout << "score: " << score << endl;
