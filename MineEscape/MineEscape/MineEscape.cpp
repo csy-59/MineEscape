@@ -12,19 +12,19 @@ int main()
 	int gameMapSize; //맵 크기
 	int gameSight = 3; //시야 크기
 
-	int gameEscapePosition[2];	//출구 위치
-	int gamePlayerPosition[2] = { 1, 1 }; //플레이어 위치
+	int gameEscapePosition[2];	//출구 위치 // { x, y }
+	int gamePlayerPosition[2] = { 1, 1 }; //플레이어 위치 // { x, y }
 	char gameKey; //입력키
 	int inputGameLevel; //난이도 입력
 
 	int gamesTalactiteCount; //종유석 개수
-	int gamesTalactitePosition[10][2]; //종유석 위치 배열
+	int gamesTalactitePosition[10][2]; //종유석 위치 배열 // { x, y }
 
 	int gameJewelryCount; //보석 개수
-	int gameJewelryPosition[10][2]; // 보석 위치 배열
-	int gameJewelryScore[10]; // 보석 위치 배열
+	int gameJewelryPosition[10][2]; // 보석 위치 배열 // { x, y }
+	int gameJewelryScore[10]; // 보석 점수
 
-	int gameItemPosition[6][2];	//아이템 위치 배열 // 갯수 변경 - Level3에서의 갯수 부족
+	int gameItemPosition[6][2];	//아이템 위치 배열 // { x, y }
 	int gameItemCount = 6; //아이템 개수
 
 	char well = '#';
@@ -36,7 +36,7 @@ int main()
 	int score = 0;
 	int walk = 0;
 
-	int setPosition[30][2] = { { 0, 0 } }; // 중복하지 않는 랜덤 좌표를 기록하기 위한 이중배열
+	int setPosition[30][2] = { { 0, 0 } }; // 중복하지 않는 랜덤 좌표를 기록하기 위한 이중배열 // { x, y }
 	int plusStamina = 0; // 스테미너 난이도 조절
 
 	// 게임 난이도 설정 // map // sight
