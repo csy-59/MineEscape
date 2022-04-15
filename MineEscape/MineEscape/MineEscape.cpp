@@ -8,7 +8,7 @@ using namespace std;
 int main()
 {
 
-	char gameMap[49][49] = { '/' }; //맵 // 맵 최대 사이즈 +2 (경계선) +3 (level3에서의 배열 오버스택? 방지용)
+	char gameMap[49][49] = { '/' }; //맵 // 맵 최대 사이즈 +2 (경계선) +7 (level3에서의 배열 오버플로우 방지용)
 	int gameMapSize; //맵 크기
 	int gameSight = 3; //시야 크기
 
